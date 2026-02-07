@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新北市西B區 分會紅綠燈月度比較報告 | 2026年2月</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        header p { opacity: 0.9; font-size: 1rem; }
+
+        .summary-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .summary-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .summary-dot.green { background: var(--green); }
+        .summary-dot.yellow { background: var(--yellow); }
+        .summary-dot.red { background: var(--red); }
+
+        .chapter-table {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px 80px 80px 80px 80px 80px 60px;
+            padding: 15px 20px;
+            background: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            gap: 10px;
+        }
+
+        .table-header span { text-align: center; }
+        .table-header span:nth-child(2) { text-align: left; }
+
+        .chapter-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px 80px 80px 80px 80px 80px 60px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: background 0.2s;
+            gap: 10px;
+        }
+
+        .chapter-row:hover { background: #f8fafc; }
+        .chapter-row:last-child { border-bottom: none; }
+
+        .rank {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .rank-1 { color: #f59e0b; }
+        .rank-2 { color: #94a3b8; }
+        .rank-3 { color: #cd7f32; }
+
+        .chapter-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-indicator.green { background: var(--green); }
+        .status-indicator.yellow { background: var(--yellow); }
+        .status-indicator.red { background: var(--red); }
+
+        .chapter-name {
+            font-weight: 600;
+        }
+
+        .chapter-eng {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .metric-cell {
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .score-cell {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .change-cell {
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .change-cell.up { background: #dcfce7; color: #166534; }
+        .change-cell.down { background: #fee2e2; color: #991b1b; }
+        .change-cell.same { background: #f1f5f9; color: #64748b; }
+
+        .arrow-cell {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .legend {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .table-header, .chapter-row {
+                grid-template-columns: 40px 1fr 60px 60px 60px 50px;
+            }
+            .table-header span:nth-child(5),
+            .table-header span:nth-child(6),
+            .table-header span:nth-child(7),
+            .chapter-row > *:nth-child(5),
+            .chapter-row > *:nth-child(6),
+            .chapter-row > *:nth-child(7) {
+                display: none;
+            }
+            .chapter-eng { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.4rem; }
+            .table-header, .chapter-row {
+                grid-template-columns: 35px 1fr 50px 50px 40px;
+            }
+            .table-header span:nth-child(4),
+            .chapter-row > *:nth-child(4) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>新北市西B區 分會紅綠燈報告</h1>
+        <p>2026年1月份 · 共 20 個分會</p>
+    </header>
+
+    <div class="container">
+        <div class="summary-bar">
+            <div class="summary-item">
+                <span class="summary-dot green"></span>
+                <span>得分上升 2 個</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-dot yellow"></span>
+                <span>得分持平 9 個</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-dot red"></span>
+                <span>得分下滑 9 個</span>
+            </div>
+        </div>
+
+        <div class="chapter-table">
+            <div class="table-header">
+                <span>#</span>
+                <span>分會</span>
+                <span>得分</span>
+                <span>變化</span>
+                <span>人數</span>
+                <span>保留%</span>
+                <span>引薦</span>
+                <span>來賓</span>
+                <span></span>
+            </div>
+
+            <a href="hua-lyu.html" class="chapter-row">
+                <span class="rank rank-1">1</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華旅</div>
+                        <div class="chapter-eng">Hua Lyu Tourism</div>
+                    </div>
+                </div>
+                <span class="score-cell">95</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">38</span>
+                <span class="metric-cell">77</span>
+                <span class="metric-cell">1.11</span>
+                <span class="metric-cell">1.96</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-champion.html" class="chapter-row">
+                <span class="rank rank-2">2</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華冠</div>
+                        <div class="chapter-eng">Hua Champion</div>
+                    </div>
+                </div>
+                <span class="score-cell">75</span>
+                <span class="change-cell down">-5</span>
+                <span class="metric-cell">41</span>
+                <span class="metric-cell">82</span>
+                <span class="metric-cell">0.66</span>
+                <span class="metric-cell">1.96</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-lu.html" class="chapter-row">
+                <span class="rank rank-2">2</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator green"></span>
+                    <div>
+                        <div class="chapter-name">華路</div>
+                        <div class="chapter-eng">Hua Lu</div>
+                    </div>
+                </div>
+                <span class="score-cell">75</span>
+                <span class="change-cell up">+10</span>
+                <span class="metric-cell">41</span>
+                <span class="metric-cell">67</span>
+                <span class="metric-cell">0.55</span>
+                <span class="metric-cell">3.63</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-real-estate.html" class="chapter-row">
+                <span class="rank">4</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華地產</div>
+                        <div class="chapter-eng">Hua Real Estate</div>
+                    </div>
+                </div>
+                <span class="score-cell">70</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">108</span>
+                <span class="metric-cell">0</span>
+                <span class="metric-cell">0.21</span>
+                <span class="metric-cell">3.00</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-medical.html" class="chapter-row">
+                <span class="rank">4</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華醫</div>
+                        <div class="chapter-eng">Hua Medical</div>
+                    </div>
+                </div>
+                <span class="score-cell">70</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">55</span>
+                <span class="metric-cell">53</span>
+                <span class="metric-cell">0.27</span>
+                <span class="metric-cell">2.52</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-green.html" class="chapter-row">
+                <span class="rank">6</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator green"></span>
+                    <div>
+                        <div class="chapter-name">華綠</div>
+                        <div class="chapter-eng">Hua Green Design</div>
+                    </div>
+                </div>
+                <span class="score-cell">65</span>
+                <span class="change-cell up">+15</span>
+                <span class="metric-cell">33</span>
+                <span class="metric-cell">60</span>
+                <span class="metric-cell">0.40</span>
+                <span class="metric-cell">2.23</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-food.html" class="chapter-row">
+                <span class="rank">7</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華餐飲</div>
+                        <div class="chapter-eng">Hua Food & Beverage</div>
+                    </div>
+                </div>
+                <span class="score-cell">60</span>
+                <span class="change-cell down">-20</span>
+                <span class="metric-cell">112</span>
+                <span class="metric-cell">65</span>
+                <span class="metric-cell">0.31</span>
+                <span class="metric-cell">3.54</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-rong.html" class="chapter-row">
+                <span class="rank">7</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華榮</div>
+                        <div class="chapter-eng">Hua Rong Prosperity</div>
+                    </div>
+                </div>
+                <span class="score-cell">60</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">94</span>
+                <span class="metric-cell">64</span>
+                <span class="metric-cell">0.75</span>
+                <span class="metric-cell">4.54</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-tai.html" class="chapter-row">
+                <span class="rank">9</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華泰</div>
+                        <div class="chapter-eng">Hua Tai</div>
+                    </div>
+                </div>
+                <span class="score-cell">55</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">64</span>
+                <span class="metric-cell">65</span>
+                <span class="metric-cell">0.38</span>
+                <span class="metric-cell">1.88</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-yi.html" class="chapter-row">
+                <span class="rank">9</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華億</div>
+                        <div class="chapter-eng">Hua Yi Billion</div>
+                    </div>
+                </div>
+                <span class="score-cell">55</span>
+                <span class="change-cell down">-20</span>
+                <span class="metric-cell">45</span>
+                <span class="metric-cell">73</span>
+                <span class="metric-cell">0.42</span>
+                <span class="metric-cell">1.52</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-ai-esg.html" class="chapter-row">
+                <span class="rank">11</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華心</div>
+                        <div class="chapter-eng">Hua AI ESG</div>
+                    </div>
+                </div>
+                <span class="score-cell">50</span>
+                <span class="change-cell down">-15</span>
+                <span class="metric-cell">45</span>
+                <span class="metric-cell">82</span>
+                <span class="metric-cell">0.32</span>
+                <span class="metric-cell">1.40</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-tech.html" class="chapter-row">
+                <span class="rank">12</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華資</div>
+                        <div class="chapter-eng">Hua Tech</div>
+                    </div>
+                </div>
+                <span class="score-cell">45</span>
+                <span class="change-cell down">-5</span>
+                <span class="metric-cell">37</span>
+                <span class="metric-cell">42</span>
+                <span class="metric-cell">0.25</span>
+                <span class="metric-cell">2.17</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-one.html" class="chapter-row">
+                <span class="rank">13</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華one</div>
+                        <div class="chapter-eng">Hua One</div>
+                    </div>
+                </div>
+                <span class="score-cell">40</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">137</span>
+                <span class="metric-cell">49</span>
+                <span class="metric-cell">0.55</span>
+                <span class="metric-cell">3.96</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-education.html" class="chapter-row">
+                <span class="rank">13</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華創育</div>
+                        <div class="chapter-eng">Hua Education</div>
+                    </div>
+                </div>
+                <span class="score-cell">40</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">32</span>
+                <span class="metric-cell">0</span>
+                <span class="metric-cell">0.09</span>
+                <span class="metric-cell">0.78</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-rich.html" class="chapter-row">
+                <span class="rank">15</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華豐</div>
+                        <div class="chapter-eng">Hua Rich</div>
+                    </div>
+                </div>
+                <span class="score-cell">35</span>
+                <span class="change-cell down">-5</span>
+                <span class="metric-cell">27</span>
+                <span class="metric-cell">53</span>
+                <span class="metric-cell">0.46</span>
+                <span class="metric-cell">1.00</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-king.html" class="chapter-row">
+                <span class="rank">15</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華軍</div>
+                        <div class="chapter-eng">Hua King</div>
+                    </div>
+                </div>
+                <span class="score-cell">35</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">26</span>
+                <span class="metric-cell">68</span>
+                <span class="metric-cell">0.38</span>
+                <span class="metric-cell">0.96</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-healthcare.html" class="chapter-row">
+                <span class="rank">17</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華晁</div>
+                        <div class="chapter-eng">Hua Healthcare</div>
+                    </div>
+                </div>
+                <span class="score-cell">30</span>
+                <span class="change-cell down">-5</span>
+                <span class="metric-cell">28</span>
+                <span class="metric-cell">56</span>
+                <span class="metric-cell">0.23</span>
+                <span class="metric-cell">1.40</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-global.html" class="chapter-row">
+                <span class="rank">18</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華橋</div>
+                        <div class="chapter-eng">Hua Global</div>
+                    </div>
+                </div>
+                <span class="score-cell">15</span>
+                <span class="change-cell down">-30</span>
+                <span class="metric-cell">37</span>
+                <span class="metric-cell">48</span>
+                <span class="metric-cell">0.10</span>
+                <span class="metric-cell">0.00</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-wang.html" class="chapter-row">
+                <span class="rank">18</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator red"></span>
+                    <div>
+                        <div class="chapter-name">華網</div>
+                        <div class="chapter-eng">Hua Wang Network</div>
+                    </div>
+                </div>
+                <span class="score-cell">15</span>
+                <span class="change-cell down">-10</span>
+                <span class="metric-cell">20</span>
+                <span class="metric-cell">42</span>
+                <span class="metric-cell">0.44</span>
+                <span class="metric-cell">0.00</span>
+                <span class="arrow-cell">→</span>
+            </a>
+
+            <a href="hua-connection.html" class="chapter-row">
+                <span class="rank">18</span>
+                <div class="chapter-name-cell">
+                    <span class="status-indicator yellow"></span>
+                    <div>
+                        <div class="chapter-name">華聯</div>
+                        <div class="chapter-eng">Hua Connection</div>
+                    </div>
+                </div>
+                <span class="score-cell">15</span>
+                <span class="change-cell same">±0</span>
+                <span class="metric-cell">20</span>
+                <span class="metric-cell">45</span>
+                <span class="metric-cell">0.17</span>
+                <span class="metric-cell">1.00</span>
+                <span class="arrow-cell">→</span>
+            </a>
+        </div>
+
+        <div class="legend">
+            <strong>說明：</strong>
+            🟢 得分上升 · 🟡 得分持平 · 🔴 得分下滑 · 變化 = 與上月(12月)比較 · 點擊分會可查看詳細指標
+        </div>
+    </div>
+
+    <footer>
+        <p>報告產生時間：2026-02-07</p>
+        <p>BNI 新北市西B區 LTnA 培訓報告</p>
+    </footer>
+</body>
+</html>

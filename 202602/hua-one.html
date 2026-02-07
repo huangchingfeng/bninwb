@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>華one Hua One | 分會紅綠燈報告</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); text-decoration: none; margin-bottom: 20px; font-size: 0.9rem; }
+        .back-link:hover { color: var(--text); }
+        
+        .header-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .header-top {
+            padding: 30px;
+            text-align: center;
+        }
+        .header-top.green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; }
+        .header-top.yellow { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); color: white; }
+        .header-top.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+        
+        .chapter-name { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
+        .chapter-eng { font-size: 1rem; opacity: 0.9; }
+        
+        .score-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 25px;
+            background: var(--card-bg);
+        }
+        
+        .score-box { text-align: center; }
+        .score-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        .score-value { font-size: 2.5rem; font-weight: 700; }
+        .score-change { font-size: 1.1rem; margin-top: 5px; }
+        .score-change.up { color: var(--green); }
+        .score-change.down { color: var(--red); }
+        .score-change.same { color: var(--text-muted); }
+        
+        .metrics-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .metrics-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+        
+        .metric-row {
+            display: grid;
+            grid-template-columns: 1fr 80px 30px 80px 50px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 10px;
+        }
+        .metric-row:last-child { border-bottom: none; }
+        
+        .metric-label { font-weight: 500; }
+        .metric-dec { text-align: right; color: var(--text-muted); }
+        .metric-arrow { text-align: center; color: var(--text-muted); }
+        .metric-jan { text-align: right; font-weight: 600; }
+        .metric-trend { text-align: center; font-size: 1.2rem; }
+        .metric-trend.up { color: var(--green); }
+        .metric-trend.down { color: var(--red); }
+        .metric-trend.same { color: var(--text-muted); }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.disabled { opacity: 0.5; pointer-events: none; }
+        
+        footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem; }
+        
+        @media (max-width: 600px) {
+            .score-section { flex-direction: column; gap: 20px; }
+            .metric-row { grid-template-columns: 1fr 60px 20px 60px 40px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回總覽</a>
+        
+        <div class="header-card">
+            <div class="header-top yellow">
+                <div class="chapter-name">華one</div>
+                <div class="chapter-eng">Hua One</div>
+            </div>
+            <div class="score-section">
+                <div class="score-box">
+                    <div class="score-label">12月得分</div>
+                    <div class="score-value">40</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">1月得分</div>
+                    <div class="score-value">40</div>
+                    <div class="score-change same">±0 ➖</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metrics-card">
+            <div class="metrics-title">各項指標比較</div>
+            
+            <div class="metric-row">
+                <span class="metric-label">分會規模</span>
+                <span class="metric-dec">142</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">137</span>
+                <span class="metric-trend down">⬇️</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">會員增長(6月)</span>
+                <span class="metric-dec">-41</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">-45</span>
+                <span class="metric-trend down">⬇️</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">保留率%</span>
+                <span class="metric-dec">46</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">49</span>
+                <span class="metric-trend up">⬆️</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">引薦數</span>
+                <span class="metric-dec">0.55</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">0.55</span>
+                <span class="metric-trend same">➖</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">來賓數</span>
+                <span class="metric-dec">4.44</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">3.96</span>
+                <span class="metric-trend down">⬇️</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">轉換率%</span>
+                <span class="metric-dec">15.8</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">15.5</span>
+                <span class="metric-trend down">⬇️</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">缺席率%</span>
+                <span class="metric-dec">10.8</span>
+                <span class="metric-arrow">→</span>
+                <span class="metric-jan">10.7</span>
+                <span class="metric-trend up">⬆️</span>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="hua-tech.html" class="nav-btn ">← 華資</a>
+            <a href="hua-education.html" class="nav-btn ">華創育 →</a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>BNI 新北市西B區 LTnA 培訓報告 | 2026年2月</p>
+    </footer>
+</body>
+</html>
