@@ -177,31 +177,46 @@
         .sortable {
             cursor: pointer;
             user-select: none;
-            position: relative;
-            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #e2e8f0;
+            transition: all 0.2s;
+            font-size: 0.8rem;
         }
 
         .sortable:hover {
+            background: #cbd5e1;
             color: var(--text);
         }
 
         .sortable::after {
             content: '⇅';
-            margin-left: 4px;
-            opacity: 0.4;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .sortable.asc {
+            background: #fef2f2;
+            color: #dc2626;
         }
 
         .sortable.asc::after {
             content: '↑';
             opacity: 1;
+        }
+
+        .sortable.desc {
+            background: #fef2f2;
             color: #dc2626;
         }
 
         .sortable.desc::after {
             content: '↓';
             opacity: 1;
-            color: #dc2626;
         }
 
         footer {
